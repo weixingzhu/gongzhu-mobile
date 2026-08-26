@@ -1,2 +1,6 @@
 .buildozer/
 bin/
+__pycache__/
+.idea/
+*.docx
+*.txt
