@@ -23,7 +23,6 @@ jobs:
           sudo apt-get install -y git zip unzip openjdk-17-jdk
           pip install --upgrade pip
           pip install buildozer cython
-          sudo chmod -R 777 /home/runner/.buildozer
 
       - name: Build with Buildozer
         run: |
