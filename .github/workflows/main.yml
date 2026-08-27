@@ -23,22 +23,11 @@ jobs:
           sudo apt-get install -y git zip unzip openjdk-17-jdk
           pip install --upgrade pip
           pip install buildozer cython
-
-      - name: Pre-install Android sdkmanager
-        run: |
-          sudo mkdir -p /home/runner/.buildozer/android/platform/android-sdk
-          cd /home/runner/.buildozer/android/platform/android-sdk
-          wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
-          unzip -q commandlinetools-linux-11076708_latest.zip -d cmdline-tools
-          mkdir -p cmdline-tools/latest
-          mv cmdline-tools/cmdline-tools/* cmdline-tools/latest/
-          rm commandlinetools-linux-11076708_latest.zip
-          echo "y" | sudo cmdline-tools/latest/bin/sdkmanager --licenses
           sudo chmod -R 777 /home/runner/.buildozer
 
       - name: Build with Buildozer
         run: |
-          buildozer -v android debug
+          yes | buildozer -v android debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
