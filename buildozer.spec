@@ -5,7 +5,7 @@ package.domain = org.example
 source.dir = .
 source.include_exts = py,png,jpg,kv,atlas,ttf
 version = 0.1
-requirements = python3==3.9.0,kivy,pyjnius,plyer,pillow,pip==23.0.1
+requirements = python3,kivy,pyjnius,plyer,pillow
 icon.filename = icon.png
 orientation = landscape
 osx.kivy_version = 2.2.0
