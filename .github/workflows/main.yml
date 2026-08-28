@@ -24,13 +24,11 @@ jobs:
           pip install --upgrade pip
           pip install buildozer cython
 
-      - name: Kill the missing sdkmanager bug
+      - name: Unlock all permissions
         run: |
-          # 用真实的sdkmanager替换假的，并让整个文件夹无障碍
-          sudo mkdir -p /home/runner/.buildozer/android/platform/android-sdk/tools/bin
-          sudo cp /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager /home/runner/.buildozer/android/platform/android-sdk/tools/bin/sdkmanager
-          sudo chmod +x /home/runner/.buildozer/android/platform/android-sdk/tools/bin/sdkmanager
-          sudo chmod -R 777 /home/runner/.buildozer/android/platform/android-sdk
+          # 提前创建并彻底打开 buildozer 的所有权限，防止缓存无法创建
+          sudo mkdir -p /home/runner/.buildozer
+          sudo chmod -R 777 /home/runner/.buildozer
 
       - name: Build with Buildozer
         run: |
