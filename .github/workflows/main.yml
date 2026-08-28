@@ -26,19 +26,15 @@ jobs:
 
       - name: Replace fake with real
         run: |
-          # 彻底删除我们之前伪造的假文件
           sudo rm -rf /home/runner/.buildozer/android/platform/android-sdk/tools
           sudo mkdir -p /home/runner/.buildozer/android/platform/android-sdk/tools/bin
-          # 从云端系统目录里，复制真正的 sdkmanager 到 buildozer 想要的地方
           sudo cp /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager /home/runner/.buildozer/android/platform/android-sdk/tools/bin/sdkmanager
           sudo chmod +x /home/runner/.buildozer/android/platform/android-sdk/tools/bin/sdkmanager
           sudo chmod -R 777 /home/runner/.buildozer
 
       - name: Build with Buildozer
         run: |
-          export ANDROIDSDK="/usr/local/lib/android/sdk"
-          export ANDROIDNDK="/usr/local/lib/android/sdk/ndk/27.3.13750724"
-          buildozer -v android debug
+          yes 2>/dev/null | buildozer -v android debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
