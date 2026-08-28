@@ -17,27 +17,22 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install dependencies
+      - name: Setup Android SDK
         run: |
           sudo apt-get update
           sudo apt-get install -y git zip unzip openjdk-17-jdk
           pip install --upgrade pip
-          pip install buildozer cython
+          pip install cython
+          pip install git+https://github.com/kivy/python-for-android.git
+          yes | sudo sdkmanager "platform-tools" "platforms;android-31" "build-tools;37.0.0" || true
 
-      - name: Pre-sign Android licenses
+      - name: Build APK directly with p4a
         run: |
-          sudo mkdir -p /home/runner/.buildozer/android/platform/android-sdk/licenses
-          sudo bash -c 'echo "8933bad161af4178b1185d1a37fbf41ea5269c55" > /home/runner/.buildozer/android/platform/android-sdk/licenses/android-sdk-license'
-          sudo bash -c 'echo "d56f5187479451eabf01fb78af6dfcb131a6481e" > /home/runner/.buildozer/android/platform/android-sdk/licenses/android-sdk-preview-license'
-
-      - name: Build with Buildozer
-        run: |
-          export ANDROIDSDK="/usr/local/lib/android/sdk"
-          export ANDROIDNDK="/usr/local/lib/android/sdk/ndk/27.3.13750724"
-          buildozer -v android debug
+          cd $GITHUB_WORKSPACE
+          p4a apk --private . --package=org.example.gongzhu --name="拱猪" --version=0.1 --bootstrap=sdl2 --requirements=python3,kivy,pyjnius,plyer,pillow --arch=arm64-v8a --arch=armeabi-v7a --android-api=31 --ndk-api=21 --ndk-version=25c --icon=icon.png
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: gongzhu-apk
-          path: bin/*.apk
+          path: ./*.apk
