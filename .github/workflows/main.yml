@@ -28,7 +28,7 @@ jobs:
         run: |
           sudo mkdir -p /home/runner/.buildozer/android/platform/android-sdk/tools/bin
           sudo touch /home/runner/.buildozer/android/platform/android-sdk/tools/bin/sdkmanager
-          sudo chmod -R 777 /home/runner/.buildozer/android/platform/android-sdk
+          sudo chmod -R 777 /home/runner/.buildozer
 
       - name: Build with Buildozer
         run: |
