@@ -24,14 +24,11 @@ jobs:
           pip install --upgrade pip
           pip install buildozer cython
 
-      - name: Pre-create sdkmanager path
-        run: |
-          sudo mkdir -p /home/runner/.buildozer/android/platform/android-sdk/tools/bin
-          sudo touch /home/runner/.buildozer/android/platform/android-sdk/tools/bin/sdkmanager
-          sudo chmod -R 777 /home/runner/.buildozer
-
       - name: Build with Buildozer
         run: |
+          export ANDROIDSDK="/usr/local/lib/android/sdk"
+          export ANDROIDNDK="/usr/local/lib/android/sdk/ndk/27.3.13750724"
+          export PATH="$PATH:/usr/local/lib/android/sdk/cmdline-tools/latest/bin"
           buildozer -v android debug
 
       - name: Upload APK
