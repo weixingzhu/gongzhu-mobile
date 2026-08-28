@@ -24,12 +24,11 @@ jobs:
           pip install --upgrade pip
           pip install buildozer cython
 
-      - name: Force Buildozer licenses
+      - name: Pre-create sdkmanager path
         run: |
-          sudo mkdir -p /home/runner/.buildozer/android/platform/android-sdk/licenses
-          sudo bash -c 'echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > /home/runner/.buildozer/android/platform/android-sdk/licenses/android-sdk-license'
-          sudo bash -c 'echo -e "\nd56f5187479451eabf01fb78af6dfcb131a6481e" > /home/runner/.buildozer/android/platform/android-sdk/licenses/android-sdk-preview-license'
-          sudo chmod -R 777 /home/runner/.buildozer
+          sudo mkdir -p /home/runner/.buildozer/android/platform/android-sdk/tools/bin
+          sudo touch /home/runner/.buildozer/android/platform/android-sdk/tools/bin/sdkmanager
+          sudo chmod -R 777 /home/runner/.buildozer/android/platform/android-sdk
 
       - name: Build with Buildozer
         run: |
