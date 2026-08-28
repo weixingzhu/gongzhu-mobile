@@ -24,17 +24,19 @@ jobs:
           pip install --upgrade pip
           pip install buildozer cython
 
-      - name: Replace fake with real
+      - name: Kill the missing sdkmanager bug
         run: |
-          sudo rm -rf /home/runner/.buildozer/android/platform/android-sdk/tools
+          # 用真实的sdkmanager替换假的，并让整个文件夹无障碍
           sudo mkdir -p /home/runner/.buildozer/android/platform/android-sdk/tools/bin
           sudo cp /usr/local/lib/android/sdk/cmdline-tools/latest/bin/sdkmanager /home/runner/.buildozer/android/platform/android-sdk/tools/bin/sdkmanager
           sudo chmod +x /home/runner/.buildozer/android/platform/android-sdk/tools/bin/sdkmanager
-          sudo chmod -R 777 /home/runner/.buildozer
+          sudo chmod -R 777 /home/runner/.buildozer/android/platform/android-sdk
 
       - name: Build with Buildozer
         run: |
-          yes 2>/dev/null | buildozer -v android debug
+          export ANDROIDSDK="/usr/local/lib/android/sdk"
+          export ANDROIDNDK="/usr/local/lib/android/sdk/ndk/27.3.13750724"
+          buildozer -v android debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
