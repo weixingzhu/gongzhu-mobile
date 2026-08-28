@@ -24,11 +24,11 @@ jobs:
           pip install --upgrade pip
           pip install buildozer cython
 
-      - name: Unlock all permissions
+      - name: Pre-sign Android licenses
         run: |
-          # 提前创建并彻底打开 buildozer 的所有权限，防止缓存无法创建
-          sudo mkdir -p /home/runner/.buildozer
-          sudo chmod -R 777 /home/runner/.buildozer
+          sudo mkdir -p /home/runner/.buildozer/android/platform/android-sdk/licenses
+          sudo bash -c 'echo "8933bad161af4178b1185d1a37fbf41ea5269c55" > /home/runner/.buildozer/android/platform/android-sdk/licenses/android-sdk-license'
+          sudo bash -c 'echo "d56f5187479451eabf01fb78af6dfcb131a6481e" > /home/runner/.buildozer/android/platform/android-sdk/licenses/android-sdk-preview-license'
 
       - name: Build with Buildozer
         run: |
