@@ -27,8 +27,8 @@ jobs:
       - name: Pre-sign SDK licenses
         run: |
           sudo mkdir -p /home/runner/.buildozer/android/platform/android-sdk/licenses
-          sudo echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > /home/runner/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
-          sudo echo -e "\nd56f5187479451eabf01fb78af6dfcb131a6481e" > /home/runner/.buildozer/android/platform/android-sdk/licenses/android-sdk-preview-license
+          echo "8933bad161af4178b1185d1a37fbf41ea5269c55" | sudo tee /home/runner/.buildozer/android/platform/android-sdk/licenses/android-sdk-license > /dev/null
+          echo "d56f5187479451eabf01fb78af6dfcb131a6481e" | sudo tee /home/runner/.buildozer/android/platform/android-sdk/licenses/android-sdk-preview-license > /dev/null
           sudo chmod -R 777 /home/runner/.buildozer
 
       - name: Build with Buildozer
