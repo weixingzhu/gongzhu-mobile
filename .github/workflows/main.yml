@@ -24,17 +24,17 @@ jobs:
           pip install --upgrade pip
           pip install buildozer cython
 
-      - name: Pre-create direct tools
+      - name: Pre-create tools (Use sudo bash!)
         run: |
           sudo mkdir -p /home/runner/.buildozer/android/platform/android-sdk/tools/bin
-          sudo echo "placeholder" > /home/runner/.buildozer/android/platform/android-sdk/tools/bin/sdkmanager
+          # 【关键修复】用 sudo bash -c 包裹，让文件写进去
+          sudo bash -c 'echo "placeholder" > /home/runner/.buildozer/android/platform/android-sdk/tools/bin/sdkmanager'
           sudo chmod -R 777 /home/runner/.buildozer
 
       - name: Build with Buildozer
         run: |
           export ANDROIDSDK="/usr/local/lib/android/sdk"
           export ANDROIDNDK="/usr/local/lib/android/sdk/ndk/27.3.13750724"
-          # 注意这里！用 yes 自动接受，并把命令吐给 buildozer
           yes | buildozer -v android debug
 
       - name: Upload APK
