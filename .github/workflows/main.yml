@@ -24,14 +24,17 @@ jobs:
           pip install --upgrade pip
           pip install buildozer cython
 
+      - name: Pre-sign SDK licenses
+        run: |
+          sudo mkdir -p /home/runner/.buildozer/android/platform/android-sdk/licenses
+          sudo echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > /home/runner/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
+          sudo echo -e "\nd56f5187479451eabf01fb78af6dfcb131a6481e" > /home/runner/.buildozer/android/platform/android-sdk/licenses/android-sdk-preview-license
+          sudo chmod -R 777 /home/runner/.buildozer
+
       - name: Build with Buildozer
         run: |
-          # 强制用云端真实自带的 SDK，并要求它跳过 sdkmanager 检查
           export ANDROIDSDK="/usr/local/lib/android/sdk"
           export ANDROIDNDK="/usr/local/lib/android/sdk/ndk/27.3.13750724"
-          export PATH="$PATH:/usr/local/lib/android/sdk/cmdline-tools/latest/bin"
-          
-          # 告诉 buildozer，不要再去自己下载 SDK 工具了，直接开始编译！
           buildozer -v android debug
 
       - name: Upload APK
