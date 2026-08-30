@@ -1,4 +1,4 @@
-name: Build Kivy APK with Docker (PURE)
+name: Build Kivy APK with Docker (AUTO-YES)
 
 on:
   push:
@@ -13,9 +13,10 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Run Buildozer inside Docker
+      # 核心魔法：强制在 Docker 内部疯狂输出 "y"，接受所有许可！
+      - name: Run Buildozer inside Docker with Auto-Yes
         run: |
-          docker run --rm -v "$PWD":/home/user/hostcwd kivy/buildozer android debug
+          yes | docker run -i --rm -v "$PWD":/home/user/hostcwd kivy/buildozer android debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
