@@ -1,4 +1,4 @@
-name: Build APK (Direct)
+name: Build Kivy APK with Docker
 
 on:
   push:
@@ -13,27 +13,13 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
-
-      - name: Install all prerequisites
+      # 使用 Kivy 官方专门为打包 APK 制作的 Docker 容器（里面工具链全齐！）
+      - name: Run Buildozer inside Docker
         run: |
-          sudo apt-get update
-          sudo apt-get install -y git zip unzip openjdk-17-jdk autoconf automake libtool-bin makeinfo
-          pip install --upgrade pip
-          pip install cython
-          pip install git+https://github.com/kivy/python-for-android.git
-          yes | sudo sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0" || true
-
-      - name: Build APK directly with p4a
-        run: |
-          cd $GITHUB_WORKSPACE
-          p4a apk --private . --package=org.example.gongzhu --name="拱猪" --version=0.1 --bootstrap=sdl2 --requirements=python3,kivy,pyjnius,plyer,pillow --arch=arm64-v8a --arch=armeabi-v7a --android-api=34 --ndk-api=21 --icon=icon.png
+          docker run --rm -v "$PWD":/home/user/hostcwd kivy/buildozer android debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: gongzhu-apk
-          path: ./*.apk
+          path: bin/*.apk
