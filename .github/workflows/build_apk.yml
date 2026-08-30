@@ -13,10 +13,17 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      # 使用 Kivy 官方专门为打包 APK 制作的 Docker 容器（里面工具链全齐！）
+      # 先在本地电脑（runner）上创建同意书
+      - name: Pre-accept SDK Licenses
+        run: |
+          sudo mkdir -p /home/runner/.buildozer/android/platform/android-sdk/licenses
+          echo "8933bad161af4178b1185d1a37fbf41ea5269c55" > /home/runner/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
+          echo "d56f5187479451eabf01fb78af6dfcb131a6481e" > /home/runner/.buildozer/android/platform/android-sdk/licenses/android-sdk-preview-license
+
+      # 把同意书“打包”进 Docker 容器里
       - name: Run Buildozer inside Docker
         run: |
-          docker run --rm -v "$PWD":/home/user/hostcwd kivy/buildozer android debug
+          docker run --rm -v "$PWD":/home/user/hostcwd -v "/home/runner/.buildozer":/home/user/.buildozer kivy/buildozer android debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
