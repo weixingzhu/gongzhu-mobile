@@ -13,15 +13,16 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      # 在本地电脑（runner）上用最高权限创建同意书
-      - name: Pre-accept SDK Licenses
+      # 提前给 Docker 容器准备好“假文件夹”，骗过它的老Bug
+      - name: Pre-create fake sdkmanager
         run: |
-          sudo mkdir -p /home/runner/.buildozer/android/platform/android-sdk/licenses
-          sudo bash -c 'echo "8933bad161af4178b1185d1a37fbf41ea5269c55" > /home/runner/.buildozer/android/platform/android-sdk/licenses/android-sdk-license'
-          sudo bash -c 'echo "d56f5187479451eabf01fb78af6dfcb131a6481e" > /home/runner/.buildozer/android/platform/android-sdk/licenses/android-sdk-preview-license'
+          sudo mkdir -p /home/runner/.buildozer/android/platform/android-sdk/tools/bin
+          echo "#!/bin/bash" | sudo tee /home/runner/.buildozer/android/platform/android-sdk/tools/bin/sdkmanager > /dev/null
+          echo "exit 0" | sudo tee -a /home/runner/.buildozer/android/platform/android-sdk/tools/bin/sdkmanager > /dev/null
+          sudo chmod +x /home/runner/.buildozer/android/platform/android-sdk/tools/bin/sdkmanager
           sudo chmod -R 777 /home/runner/.buildozer
 
-      # 把同意书“打包”进 Docker 容器里
+      # 把提前准备好的“假文件夹”注入到容器里
       - name: Run Buildozer inside Docker
         run: |
           docker run --rm -v "$PWD":/home/user/hostcwd -v "/home/runner/.buildozer":/home/user/.buildozer kivy/buildozer android debug
