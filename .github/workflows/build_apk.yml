@@ -1,4 +1,4 @@
-name: Build Kivy APK with Docker
+name: Build Kivy APK with Docker (PURE)
 
 on:
   push:
@@ -13,19 +13,9 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      # 提前给 Docker 容器准备好“假文件夹”，骗过它的老Bug
-      - name: Pre-create fake sdkmanager
-        run: |
-          sudo mkdir -p /home/runner/.buildozer/android/platform/android-sdk/tools/bin
-          echo "#!/bin/bash" | sudo tee /home/runner/.buildozer/android/platform/android-sdk/tools/bin/sdkmanager > /dev/null
-          echo "exit 0" | sudo tee -a /home/runner/.buildozer/android/platform/android-sdk/tools/bin/sdkmanager > /dev/null
-          sudo chmod +x /home/runner/.buildozer/android/platform/android-sdk/tools/bin/sdkmanager
-          sudo chmod -R 777 /home/runner/.buildozer
-
-      # 把提前准备好的“假文件夹”注入到容器里
       - name: Run Buildozer inside Docker
         run: |
-          docker run --rm -v "$PWD":/home/user/hostcwd -v "/home/runner/.buildozer":/home/user/.buildozer kivy/buildozer android debug
+          docker run --rm -v "$PWD":/home/user/hostcwd kivy/buildozer android debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
